@@ -1,0 +1,56 @@
+Options -MultiViews -Indexes
+RewriteEngine On
+
+# 1. Prevent infinite loops and handle real assets
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. Main Mappings
+RewriteRule ^$ index.php [L]
+RewriteRule ^home/?$ index.php [L]
+
+# 3. View Fallbacks (Explicitly defined for safety)
+RewriteRule ^(about|contact|services|projects)/?$ view/$1.php [L]
+
+# 4. Admin Mappings
+RewriteRule ^dashboard/?$ controller/dashboard/index.php [L]
+RewriteRule ^admin/?$ controller/index.php [L]
+RewriteRule ^makeAdmin/?$ controller/makeAdmin.php [L]
+RewriteRule ^admin/projects/?$ controller/projects/index.php [L]
+RewriteRule ^admin/contacts/?$ controller/contacts/index.php [L]
+RewriteRule ^admin/testimonials/?$ controller/testimonials/index.php [L]
+RewriteRule ^admin/visitors/?$ controller/visitors/index.php [L]
+RewriteRule ^admin/clients/?$ controller/clients/index.php [L]
+RewriteRule ^admin/cms/?$ controller/cms/index.php [L]
+
+# 5. Generic PHP Fallback
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/.]+)/?$ $1.php [L]
+
+# 6. Global 404
+ErrorDocument 404 /view/404.php
+
+# 7. Enable GZIP Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml application/xhtml+xml image/svg+xml font/ttf font/otf font/woff font/woff2 image/x-icon
+</IfModule>
+
+# 8. Enable Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
