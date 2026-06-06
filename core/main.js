@@ -3,7 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let lenis;
     if (typeof Lenis !== 'undefined') {
         lenis = new Lenis({
-            autoRaf: true,
+            duration: 1.4,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential out
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1.0,
+            autoRaf: true
         });
     }
 
@@ -24,17 +30,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollIndicator = document.querySelector('.hero-scroll-indicator');
     
     let parallaxImages = [];
+    let aboutSectionTop = 0;
+
     const cacheParallaxImages = () => {
-        parallaxImages = Array.from(document.querySelectorAll('.img-reveal-wrapper img, .project-img img, .project-visual img')).map(img => ({
-            element: img,
-            parent: img.parentElement
-        }));
+        const currentScrollY = window.scrollY;
+        
+        // Cache parallax images layout data
+        parallaxImages = Array.from(document.querySelectorAll('.img-reveal-wrapper img, .project-img img, .project-visual img')).map(img => {
+            const parent = img.parentElement;
+            if (!parent) return null;
+            const rect = parent.getBoundingClientRect();
+            return {
+                element: img,
+                parentTop: rect.top + currentScrollY,
+                parentHeight: rect.height
+            };
+        }).filter(Boolean);
+
+        // Cache about section top position
+        const aboutSection = document.getElementById('about');
+        if (aboutSection) {
+            aboutSectionTop = aboutSection.getBoundingClientRect().top + currentScrollY;
+        }
     };
     cacheParallaxImages();
 
     let pageScrollHeight = document.documentElement.scrollHeight;
     window.addEventListener('resize', () => {
         pageScrollHeight = document.documentElement.scrollHeight;
+        cacheParallaxImages();
     });
 
     // --- Mobile Menu Toggle ---
@@ -147,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Scroll-Linked Animations ---
-    function updateOnScroll() {
+    function updateOnScroll(e) {
         // === READ PHASE ===
-        const scrollY = window.scrollY;
+        const scrollY = (e && typeof e.scroll === 'number') ? e.scroll : window.scrollY;
         const viewportHeight = window.innerHeight;
         const isMobile = window.innerWidth <= 768;
         const scrollFactor = isMobile ? 0.5 : 1.2;
@@ -157,11 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Parallax image parent bounding rect reads
         const parallaxData = [];
         parallaxImages.forEach(item => {
-            if (!item.parent) return;
-            const rect = item.parent.getBoundingClientRect();
-            if (rect.top < viewportHeight && rect.bottom > 0) {
-                const distance = viewportHeight + rect.height;
-                const progress = (viewportHeight - rect.top) / distance;
+            const topInViewport = item.parentTop - scrollY;
+            const bottomInViewport = topInViewport + item.parentHeight;
+            if (topInViewport < viewportHeight && bottomInViewport > 0) {
+                const distance = viewportHeight + item.parentHeight;
+                const progress = (viewportHeight - topInViewport) / distance;
                 const move = (progress - 0.5) * 60;
                 parallaxData.push({ element: item.element, move });
             }
@@ -180,15 +204,14 @@ document.addEventListener('DOMContentLoaded', () => {
             curtainBottom.style.transform = `translateY(${progress * 105}%)`;
 
             if (scrollIndicator) {
-                const aboutSection = document.getElementById('about');
                 let opacity = 0.85;
-                if (aboutSection) {
-                    const rect = aboutSection.getBoundingClientRect();
+                if (aboutSectionTop > 0) {
+                    const topInViewport = aboutSectionTop - scrollY;
                     const enterStart = viewportHeight; // Bottom of viewport
                     const enterEnd = viewportHeight - 200; // Scrolled 200px into view
                     
-                    if (rect.top <= enterStart) {
-                        const progress = (enterStart - rect.top) / (enterStart - enterEnd);
+                    if (topInViewport <= enterStart) {
+                        const progress = (enterStart - topInViewport) / (enterStart - enterEnd);
                         opacity = Math.max(0, 0.85 * (1 - progress));
                     }
                 }
@@ -1264,5 +1287,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 scrollHint.classList.remove('faded');
             }
         }, { passive: true });
+    }
+
+    // --- Entire Footer Mouse Spotlight & Background Text parallax ---
+    const footer = document.querySelector('.footer');
+    const footerSpotlight = document.getElementById('footer-spotlight');
+    const footerBgTexts = document.querySelectorAll('.footer-bg-text');
+
+    if (footer) {
+        let footerRect = null;
+        footer.addEventListener('mouseenter', () => {
+            footerRect = footer.getBoundingClientRect();
+        });
+        footer.addEventListener('mouseleave', () => {
+            footerRect = null;
+            // Return background text to center
+            footerBgTexts.forEach(bgText => {
+                gsap.to(bgText, {
+                    x: 0,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+        });
+        footer.addEventListener('mousemove', (e) => {
+            if (!footerRect) {
+                footerRect = footer.getBoundingClientRect();
+            }
+            const x = e.clientX - footerRect.left;
+            const y = e.clientY - footerRect.top;
+
+            // Move spotlight
+            if (footerSpotlight) {
+                gsap.to(footerSpotlight, {
+                    left: x,
+                    top: y,
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
+            }
+
+            // Move background big texts (subtle parallax shift)
+            const xShift = (e.clientX - (footerRect.left + footerRect.width / 2)) / footerRect.width * 50; // max 50px
+            const yShift = (e.clientY - (footerRect.top + footerRect.height / 2)) / footerRect.height * 20; // max 20px
+            footerBgTexts.forEach(bgText => {
+                gsap.to(bgText, {
+                    x: xShift,
+                    y: yShift,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+        });
     }
 });

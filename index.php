@@ -38,7 +38,6 @@ include 'includes/pageheader.php';
                             <h1 class="reveal-h1 cycle-phrase">CREATIVE<br><span style="color: var(--accent);">AGENCY</span></h1>
                             <h1 class="reveal-h1 cycle-phrase">WEB<br><span style="color: var(--accent);">EXPERTS</span></h1>
                             <h1 class="reveal-h1 cycle-phrase">SOFTWARE<br><span style="color: var(--accent);">SOLUTIONS</span></h1>
-                            <h1 class="reveal-h1 cycle-phrase">YOUR<br><span style="color: var(--accent);">PARTNER</span></h1>
                         </div>
                     </div>
                 </div>

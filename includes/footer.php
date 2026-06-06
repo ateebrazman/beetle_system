@@ -1,5 +1,4 @@
 <footer class="footer">
-    <div class="grain"></div>
     <div class="footer-cta-portal">
         <!-- Spotlight Lens Effect -->
         <div class="cta-spotlight" id="cta-spotlight"></div>

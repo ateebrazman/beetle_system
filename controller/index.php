@@ -212,7 +212,6 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <body class="inner-page">
-    <div class="grain"></div>
     <div id="cursor"></div>
     <div id="cursor-follower"></div>
 

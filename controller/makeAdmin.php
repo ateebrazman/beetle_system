@@ -127,7 +127,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body class="inner-page">
-    <div class="grain"></div>
     
     <section class="login-page">
         <div class="login-glow"></div>
