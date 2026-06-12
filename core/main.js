@@ -3,14 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let lenis;
     if (typeof Lenis !== 'undefined') {
         lenis = new Lenis({
-            duration: 1.4,
+            duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential out
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 1.0,
-            autoRaf: true
+            wheelMultiplier: 1.15
         });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
     }
 
     // Elements
@@ -441,10 +446,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Toggle current
             this.setAttribute('aria-expanded', (!isExpanded).toString());
-
-            // Pulse effect
-            this.style.opacity = '0.5';
-            setTimeout(() => this.style.opacity = '1', 150);
 
             // Close others
             accordionTriggers.forEach(other => {
@@ -1251,8 +1252,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Footer CTA Spotlight Interaction ---
     const ctaPortal = document.querySelector('.footer-cta-portal');
     const ctaSpotlight = document.getElementById('cta-spotlight');
+    const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window);
 
-    if (ctaPortal && ctaSpotlight) {
+    if (ctaPortal && ctaSpotlight && !isMobileDevice) {
         let ctaRect = null;
         ctaPortal.addEventListener('mouseenter', () => {
             ctaRect = ctaPortal.getBoundingClientRect();
@@ -1294,7 +1296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerSpotlight = document.getElementById('footer-spotlight');
     const footerBgTexts = document.querySelectorAll('.footer-bg-text');
 
-    if (footer) {
+    if (footer && !isMobileDevice) {
         let footerRect = null;
         footer.addEventListener('mouseenter', () => {
             footerRect = footer.getBoundingClientRect();
@@ -1338,6 +1340,164 @@ document.addEventListener('DOMContentLoaded', () => {
                     duration: 0.8,
                     ease: 'power2.out'
                 });
+            });
+        });
+    }
+
+    // --- Desktop Premium Header & Navigation Hover Animations ---
+    const desktopNav = document.getElementById('navbar');
+    const navLinksContainer = document.querySelector('.nav-links');
+    const navLinksItems = document.querySelectorAll('.nav-links a');
+    const navHoverPill = document.querySelector('.nav-hover-pill');
+    const desktopMediaQuery = window.matchMedia('(min-width: 993px)');
+
+    if (desktopNav && navLinksContainer && navHoverPill) {
+        let previousLeft = 0;
+
+        // 1. Text splitting helper
+        const initNavTextSplitting = () => {
+            navLinksItems.forEach(link => {
+                if (link.querySelector('.char-wrapper')) return;
+                const originalText = link.textContent.trim();
+                link.innerHTML = '';
+                link.setAttribute('aria-label', originalText); // Accessibility
+
+                [...originalText].forEach(char => {
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'char-wrapper';
+
+                    const orig = document.createElement('span');
+                    orig.className = 'char-original';
+                    orig.textContent = char === ' ' ? '\u00A0' : char;
+
+                    const clone = document.createElement('span');
+                    clone.className = 'char-clone';
+                    clone.textContent = char === ' ' ? '\u00A0' : char;
+
+                    wrapper.appendChild(orig);
+                    wrapper.appendChild(clone);
+                    link.appendChild(wrapper);
+                });
+            });
+        };
+
+        if (desktopMediaQuery.matches) {
+            initNavTextSplitting();
+        }
+        desktopMediaQuery.addEventListener('change', (e) => {
+            if (e.matches) initNavTextSplitting();
+        });
+
+        // 2. Mouse Tracker inside Navbar
+        desktopNav.addEventListener('mousemove', (e) => {
+            if (!desktopMediaQuery.matches) return;
+            const rect = desktopNav.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            desktopNav.style.setProperty('--nav-mouse-x', `${x}px`);
+            desktopNav.style.setProperty('--nav-mouse-y', `${y}px`);
+        });
+
+        // 3. Hover Pill & Link Interactions
+        navLinksItems.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                if (!desktopMediaQuery.matches) return;
+
+                // Animate characters (staggered 3D flip)
+                const origs = link.querySelectorAll('.char-original');
+                const clones = link.querySelectorAll('.char-clone');
+                gsap.killTweensOf(origs);
+                gsap.killTweensOf(clones);
+
+                gsap.to(origs, {
+                    yPercent: -100,
+                    rotateX: 90,
+                    duration: 0.45,
+                    ease: 'power3.out',
+                    stagger: 0.02
+                });
+
+                gsap.to(clones, {
+                    yPercent: -100,
+                    rotateX: 0,
+                    duration: 0.45,
+                    ease: 'power3.out',
+                    stagger: 0.02
+                });
+
+                // Calculate positions for the pill
+                const containerRect = navLinksContainer.getBoundingClientRect();
+                const linkRect = link.getBoundingClientRect();
+                const paddingX = 24; // horizontal padding for capsule
+                const paddingY = 12; // vertical padding for capsule
+
+                const relativeLeft = linkRect.left - containerRect.left - (paddingX / 2);
+                const relativeTop = linkRect.top - containerRect.top - (paddingY / 2);
+                const targetWidth = linkRect.width + paddingX;
+                const targetHeight = linkRect.height + paddingY;
+
+                // Stretch (skew) pill based on horizontal travel direction and distance
+                let skewVal = 0;
+                if (previousLeft > 0) {
+                    const distance = relativeLeft - previousLeft;
+                    skewVal = Math.min(Math.max(distance * 0.1, -15), 15);
+                }
+                previousLeft = relativeLeft;
+
+                gsap.killTweensOf(navHoverPill);
+                gsap.to(navHoverPill, {
+                    opacity: 1,
+                    scale: 1,
+                    left: relativeLeft,
+                    top: relativeTop,
+                    width: targetWidth,
+                    height: targetHeight,
+                    skewX: skewVal,
+                    duration: 0.35,
+                    ease: 'power3.out',
+                    onComplete: () => {
+                        gsap.to(navHoverPill, { skewX: 0, duration: 0.25, ease: 'power2.out' });
+                    }
+                });
+            });
+
+            link.addEventListener('mouseleave', () => {
+                if (!desktopMediaQuery.matches) return;
+
+                // Roll characters back
+                const origs = link.querySelectorAll('.char-original');
+                const clones = link.querySelectorAll('.char-clone');
+                gsap.killTweensOf(origs);
+                gsap.killTweensOf(clones);
+
+                gsap.to(origs, {
+                    yPercent: 0,
+                    rotateX: 0,
+                    duration: 0.4,
+                    ease: 'power3.out',
+                    stagger: 0.015
+                });
+
+                gsap.to(clones, {
+                    yPercent: 0,
+                    rotateX: -90,
+                    duration: 0.4,
+                    ease: 'power3.out',
+                    stagger: 0.015
+                });
+            });
+        });
+
+        // Hide pill when leaving the nav links container
+        navLinksContainer.addEventListener('mouseleave', () => {
+            if (!desktopMediaQuery.matches) return;
+            previousLeft = 0;
+            gsap.to(navHoverPill, {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.35,
+                ease: 'power2.out'
             });
         });
     }

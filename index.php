@@ -236,6 +236,13 @@ include 'includes/pageheader.php';
             <div class="container">
                 <div class="pricing-header">
                     <span class="subheading"><span>06 / PACKAGES</span></span>
+                    <div class="scroll-hint-mobile">
+                        <span>SWIPE RIGHT</span>
+                        <svg class="swipe-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
                 </div>
                 <div class="pricing-grid">
                     <div class="price-card">
@@ -278,13 +285,6 @@ include 'includes/pageheader.php';
                             <button class="btn-text-only view-details" data-package="enterprise">VIEW PLAN</button>
                         </div>
                     </div>
-                </div>
-                <div class="scroll-hint-mobile">
-                    <span>SWIPE RIGHT</span>
-                    <svg class="swipe-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
                 </div>
             </div>
         </section>
@@ -620,5 +620,4 @@ include 'includes/pageheader.php';
     </script>
     <script src="core/main.js" defer></script>
 </body>
-
 </html>

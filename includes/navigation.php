@@ -1,5 +1,16 @@
 
     <nav id="navbar" aria-label="Main Navigation">
+        <!-- Interactive Hover Grid & Glow Background -->
+        <div class="navbar-interactive-bg">
+            <div class="navbar-bg-glow"></div>
+            <div class="navbar-bg-grid">
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
+            </div>
+        </div>
+
         <div class="logo">
             <a href="./" style="text-decoration: none; color: inherit;">BEETLE SYSTEM</a>
         </div>
@@ -37,6 +48,7 @@
         </div>
         
         <div class="nav-links">
+            <div class="nav-hover-pill"></div>
             <a href="about">About</a>
             <a href="services">Services</a>
             <a href="projects">Projects</a>
