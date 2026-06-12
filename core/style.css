@@ -2345,9 +2345,17 @@ body.page-loaded nav {
   content: "";
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(circle at 100% 0%, rgba(255, 95, 31, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 0% 100%, rgba(255, 95, 31, 0.05) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 95, 31, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(255, 95, 31, 0.05) 0%,
+      transparent 50%
+    );
   pointer-events: none;
   z-index: -1;
 }
@@ -2356,7 +2364,7 @@ body.page-loaded nav {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -2446,7 +2454,7 @@ body.menu-open {
   padding: 0.2rem 1rem;
   transform: translateY(30px);
   opacity: 0;
-  transition: 
+  transition:
     transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
     color 0.3s ease,
@@ -2474,7 +2482,9 @@ body.menu-open {
   width: 0;
   height: 2px;
   background-color: var(--accent);
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mobile-links a:hover::after {
@@ -2487,11 +2497,21 @@ body.menu-open {
   opacity: 1;
 }
 
-.mobile-links a:nth-child(1) { transition-delay: 0.15s; }
-.mobile-links a:nth-child(2) { transition-delay: 0.22s; }
-.mobile-links a:nth-child(3) { transition-delay: 0.29s; }
-.mobile-links a:nth-child(4) { transition-delay: 0.36s; }
-.mobile-links a:nth-child(5) { transition-delay: 0.43s; }
+.mobile-links a:nth-child(1) {
+  transition-delay: 0.15s;
+}
+.mobile-links a:nth-child(2) {
+  transition-delay: 0.22s;
+}
+.mobile-links a:nth-child(3) {
+  transition-delay: 0.29s;
+}
+.mobile-links a:nth-child(4) {
+  transition-delay: 0.36s;
+}
+.mobile-links a:nth-child(5) {
+  transition-delay: 0.43s;
+}
 
 .mobile-links a:hover {
   color: var(--accent);
@@ -2680,7 +2700,8 @@ body.menu-open {
   }
 
   .logo {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
+    margin-right: 12rem;
   }
 
   .pricing-grid {
@@ -3243,7 +3264,7 @@ h2 span {
 /* Redesigned Contact Layout */
 .contact-editorial-hero {
   padding: 15rem 0 6rem;
-  background: #E5E3D3;
+  background: #e5e3d3;
   color: var(--text-primary);
 }
 
@@ -3811,7 +3832,7 @@ h2 span {
 /* Editorial About Layout */
 .about-editorial-hero {
   padding: 15rem 0 10rem;
-  background: #E5E3D3;
+  background: #e5e3d3;
 }
 
 .about-hero-branding h1 {
@@ -3876,7 +3897,7 @@ h2 span {
 /* High-Density Studio Grid (Dark Theme) */
 .projects-asymmetric-section {
   padding: 6rem 0 8rem;
-  background: #E5E3D3;
+  background: #e5e3d3;
   color: var(--text-primary);
 }
 
@@ -5703,7 +5724,8 @@ body.page-loaded .hero-scroll-indicator {
 }
 
 /* Lenis smooth scroll adjustments */
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -5788,10 +5810,18 @@ html.lenis, html.lenis body {
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .navbar-bg-grid .grid-line:nth-child(1) { transition-delay: 0s; }
-  .navbar-bg-grid .grid-line:nth-child(2) { transition-delay: 0.05s; }
-  .navbar-bg-grid .grid-line:nth-child(3) { transition-delay: 0.1s; }
-  .navbar-bg-grid .grid-line:nth-child(4) { transition-delay: 0.15s; }
+  .navbar-bg-grid .grid-line:nth-child(1) {
+    transition-delay: 0s;
+  }
+  .navbar-bg-grid .grid-line:nth-child(2) {
+    transition-delay: 0.05s;
+  }
+  .navbar-bg-grid .grid-line:nth-child(3) {
+    transition-delay: 0.1s;
+  }
+  .navbar-bg-grid .grid-line:nth-child(4) {
+    transition-delay: 0.15s;
+  }
 
   #navbar:hover .grid-line {
     transform: scaleY(1);
@@ -5815,7 +5845,8 @@ html.lenis, html.lenis body {
   }
 
   @keyframes pillWobble {
-    0%, 100% {
+    0%,
+    100% {
       border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
     }
     33% {
