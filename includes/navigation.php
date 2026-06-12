@@ -63,10 +63,18 @@
             <span></span>
         </button>
         <div class="mobile-links">
-            <a href="./"><span class="link-num">01</span> Home</a>
-            <a href="about"><span class="link-num">02</span> About</a>
-            <a href="services"><span class="link-num">03</span> Services</a>
-            <a href="projects"><span class="link-num">04</span> Projects</a>
-            <a href="contact"><span class="link-num">05</span> Contact</a>
+            <a href="./">Home</a>
+            <a href="about">About</a>
+            <a href="services">Services</a>
+            <a href="projects">Projects</a>
+            <a href="contact">Contact</a>
+        </div>
+        <div class="mobile-menu-footer">
+            <span class="mobile-footer-tag">Premium Digital Solutions</span>
+            <div class="mobile-socials">
+                <a href="https://linkedin.com" target="_blank" rel="noopener">LINKEDIN</a>
+                <a href="https://instagram.com" target="_blank" rel="noopener">INSTAGRAM</a>
+                <a href="https://twitter.com" target="_blank" rel="noopener">TWITTER</a>
+            </div>
         </div>
     </div>
