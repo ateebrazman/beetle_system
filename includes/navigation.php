@@ -63,10 +63,10 @@
             <span></span>
         </button>
         <div class="mobile-links">
-            <a href="./">Home</a>
-            <a href="about">About</a>
-            <a href="services">Services</a>
-            <a href="projects">Projects</a>
-            <a href="contact">Contact</a>
+            <a href="./"><span class="link-num">01</span> Home</a>
+            <a href="about"><span class="link-num">02</span> About</a>
+            <a href="services"><span class="link-num">03</span> Services</a>
+            <a href="projects"><span class="link-num">04</span> Projects</a>
+            <a href="contact"><span class="link-num">05</span> Contact</a>
         </div>
     </div>
